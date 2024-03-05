@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { SessionProvider } from "../lib/SessionProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,11 +19,13 @@ export const metadata: Metadata = {
 
   return (
     <html lang="en" suppressHydrationWarning>
+      <SessionProvider>
         <body className={inter.className}>
           <ThemeProvider defaultTheme="system" attribute="class" enableSystem={true} disableTransitionOnChange>
             {children}
           </ThemeProvider>
         </body>
+        </SessionProvider>
     </html>
   );
 }
