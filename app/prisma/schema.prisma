@@ -43,8 +43,20 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  jobs          Job[]
 }
-
+model Job {
+  id            String    @id @default(cuid())
+  role          String
+  createdAt     DateTime @default(now())
+  website       String
+  location      String
+  companyName   String
+  companyLogo   String
+  compensation  Int
+  userId        String
+  user  User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
 model VerificationToken {
   identifier String
   token      String   @unique
