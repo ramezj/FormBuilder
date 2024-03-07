@@ -24,12 +24,12 @@ import {
   } from "@/components/ui/select"
 
 export default function page() {
-    const [ formTitle, setFormTitle ] = useState<string>("Hello World!");
+    const [ formTitle, setFormTitle ] = useState<string>("");
     const [ fields, setFields ] = useState<Field[]>([]);
     const [ fieldLabel, setFieldLabel ] = useState<string>("");
-    const [ fieldType, setFieldType ] = useState<string>();
+    const [ fieldType, setFieldType ] = useState<string>("text");
     const addNewField = (e:any) => {
-        setFields([...fields,  { type: 'text', label:fieldLabel}])
+        setFields([...fields,  { type: fieldType, label:fieldLabel}])
     }
     const handleSubmit = async () => {
         try {
@@ -46,6 +46,7 @@ export default function page() {
     return (
         <>
         <center>
+        <Input value={formTitle} onChange={((e) => {setFormTitle(e.target.value)})} className="border-none text-lg w-1/2" placeholder="Form Name" />
         <Dialog>
       <DialogTrigger asChild>
         <Button variant="outline">Add New Field</Button>
@@ -63,7 +64,6 @@ export default function page() {
                 value={fieldLabel}
                 onChange={((e) => {setFieldLabel(e.target.value)})}
               id="name"
-              placeholder="Enter Email"
               className="col-span-3"
             />
           </div>
@@ -71,16 +71,16 @@ export default function page() {
             <Label htmlFor="username" className="text-left">
               Type
             </Label>
-            <Select>
+            <Select value={fieldType} onValueChange={setFieldType}>
                 <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="text" />
                 </SelectTrigger>
                 <SelectContent>
                     <SelectGroup>
-                    <SelectItem value="apple">text</SelectItem>
-                    <SelectItem value="banana">number</SelectItem>
-                    <SelectItem value="blueberry">radio</SelectItem>
-                    <SelectItem value="grapes">dropdown</SelectItem>
+                    <SelectItem value="text">text</SelectItem>
+                    <SelectItem value="number">number</SelectItem>
+                    <SelectItem value="radio">radio</SelectItem>
+                    <SelectItem value="dropdown">dropdown</SelectItem>
                     </SelectGroup>
                 </SelectContent>
             </Select>
@@ -95,7 +95,7 @@ export default function page() {
                 return (
                     <div key={index}>
                         <label>{field.label}</label>
-                        <input type={field.type}/>
+                        <Input className="w-1/2" type={field.type}/>
                         <br />
                     </div>
                 )

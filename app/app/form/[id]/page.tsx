@@ -1,6 +1,9 @@
 "use client"
 import axios from "axios"
 import { useState, useEffect } from "react"
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
 export default function Page({ params }: {params: { id: string}}) {
     const [ loading, setLoading ] = useState<boolean>(true);
     const [ form, setForm ] = useState<any>()
@@ -21,12 +24,12 @@ export default function Page({ params }: {params: { id: string}}) {
     }
     return (
         <>
+        <center>
         {
             loading === false && 
             <>
-            <h2>Form Name : {form.title}</h2>
             <br />
-            <h2>Form Fields :</h2>
+            <h2>{form.title}</h2>
             <br />
             <form onSubmit={handleFormSubmit}>
             {
@@ -34,15 +37,18 @@ export default function Page({ params }: {params: { id: string}}) {
                     return (
                         <div key={field.id}>  
                         <label>{field.label}</label>
-                            {field.type === 'text' && <><input type='text'/></>}
-                            {field.type === 'number' && <><input type='number' /></>}
+                            {field.type === 'text' && <><Input className="w-1/2" type='text'/></>}
+                            {field.type === 'number' && <><Input className='w-1/2' type='number' /></>}
                         </div>
                     )
                 })
             }
+            <br />
+            <Button type="submit">Submit Form</Button>
             </form>
             </>
         }
+        </center>
         </>
     )
 }
