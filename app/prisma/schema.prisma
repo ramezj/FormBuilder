@@ -43,20 +43,35 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-  jobs          Job[]
+  // forms         Form[]
 }
-model Job {
+
+model Form {
   id            String    @id @default(cuid())
-  role          String
-  createdAt     DateTime @default(now())
-  website       String
-  location      String
-  companyName   String
-  companyLogo   String
-  compensation  Int
-  userId        String
-  user  User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title         String
+  // userId        String
+  // user          User @relation(fields: [userId], references: [id])
+  fields        Field[]
+  responses     Response[]
 }
+model Field {
+  id            String    @id @default(cuid())
+  type          String
+  label         String
+  options       String[]
+  formId        String
+  form          Form @relation(fields: [formId], references: [id])
+  responses     Response[]
+}
+model Response {
+  id            String    @id @default(cuid())
+  value         String
+  fieldId       String
+  field         Field @relation(fields: [fieldId], references: [id])
+  formId        String
+  form          Form @relation(fields: [formId], references: [id])
+}
+
 model VerificationToken {
   identifier String
   token      String   @unique
