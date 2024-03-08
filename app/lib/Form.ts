@@ -12,15 +12,22 @@ export async function getFormById(id:string) {
                 fields:true
             }
         });
-        return { form }
+        if(!form) { 
+            const response = { ok:false, form: null, error:'form not found'};
+            return response;
+        }
+        const response = { ok:true, form, error:null };
+        return response
     } catch (error) {
-        return { error }
+        const response = { ok:false, form:null, error:error };
+        return response;
     }
 }
 
 export async function createForm(title: string) {
     if(!title) {
-        throw new Error('Form must have a name');
+        const response = { ok:false, form:null, error: 'title missing'}
+        return response;
     }
     try {
         const NewForm = await prisma.form.create({
@@ -28,29 +35,25 @@ export async function createForm(title: string) {
                 title:title
             }
         });
-        const response = {
-            ok:true,
-            form:NewForm
-        }
+        const response = { ok:true, form:NewForm, error:null }
         return response;
     } catch (error) {
-        const response = {
-            ok:false,
-            form:null
-        }
+        const response = { ok:false, form:null, error:error }
         return response;
     }
 }
 
 export async function EditForm(formId:string, fields:Field[]) {
     try {
+        // check first if form exists.
         const existingForm = await prisma.form.findUnique({
             where: { 
                 id:formId 
             }
           });
           if (!existingForm) {
-            throw new Error('Form not found');
+            const response = { ok:false, form:null, error:'form doesnt exist' }
+            return response;
           }
     } catch (error) {
         

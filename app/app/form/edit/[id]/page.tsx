@@ -3,6 +3,7 @@ import axios from "axios"
 import { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input";
 import FormLayout from "@/components/Layout/FormLayout";
+import { getFormById } from "@/lib/Form";
 import { Button } from "@/components/ui/button";
 import {
     Dialog,
@@ -33,13 +34,17 @@ export default function Page({ params }: {params: { id: string}}) {
     const [ fieldType, setFieldType ] = useState<string>(""); 
     const [ response, setResponse ] = useState<{ [key: string]: string}>({});
     useEffect(() => {
-        const fetchForm = async () => {
-            const response = await axios.get(`/api/form/${params.id}`);
-            setFields(response.data.form.fields);
-            setForm(response.data.form);
-            setLoading(false);
+      const fetchForm = async () => {
+        const response = await getFormById(params.id);
+        setLoading(false);
+        if(response.ok === true) {
+          setForm(response.form);
+          setFields(response.form?.fields);
+        } else {
+          // catch error here and handle it
         }
-        fetchForm();
+      }
+      fetchForm();
     },[])
     const handleInputChange = (e:any) => {
         setResponse({...response, [e.target.id]: e.target.value });
