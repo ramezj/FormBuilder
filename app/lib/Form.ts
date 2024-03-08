@@ -44,6 +44,8 @@ export async function createForm(title: string) {
 }
 
 export async function EditForm(formId:string, fields:Field[]) {
+    console.log("form Id :", formId);
+    console.log("fields :", fields);
     try {
         // check first if form exists.
         const existingForm = await prisma.form.findUnique({
@@ -55,6 +57,12 @@ export async function EditForm(formId:string, fields:Field[]) {
             const response = { ok:false, form:null, error:'form doesnt exist' }
             return response;
           }
+          const fieldsWithFormId = fields.map((field) => ({
+            ...field, formId:formId
+          }))
+          const createFields = await prisma.field.createMany({
+            data: fieldsWithFormId,
+          })
     } catch (error) {
         
     }
