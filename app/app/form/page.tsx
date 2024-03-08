@@ -53,8 +53,9 @@ export default function page() {
     }
     return (
         <>
+        <title>Create form</title>
         <center>
-        <Input value={formTitle} onChange={((e) => {setFormTitle(e.target.value)})} className="border-none text-lg w-1/2" placeholder="Form Name" />
+        <Input value={formTitle} onChange={((e) => {setFormTitle(e.target.value)})} className="text-lg w-1/2" placeholder="Form Name" />
         <Dialog>
       <DialogTrigger asChild>
         <Button variant="outline">Add New Field</Button>

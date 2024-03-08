@@ -6,22 +6,22 @@ import Navbar from "@/components/Navbar";
 import { GetUser } from "@/actions/User";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import CreateForm from "@/components/CreateForm";
 
 export default function Home() {
   const { data: session, status } = useSession();
   return (
     <>
-    {
+    {/* {
       status == "authenticated" &&
       <>
       <p>signed in as {JSON.stringify(session.user)}</p>
       </>
-    }
-    <Button asChild>
-      <Link href='/form'>
-        Create Form
-      </Link>
-    </Button>
+    } */}
+    <br />
+    <center>
+      <CreateForm />
+    </center>
     </>
   );
 }
