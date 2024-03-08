@@ -29,7 +29,15 @@ export default function page() {
     const [ fieldLabel, setFieldLabel ] = useState<string>("");
     const [ fieldType, setFieldType ] = useState<string>("text");
     const addNewField = (e:any) => {
-        setFields([...fields,  { type: fieldType, label:fieldLabel}])
+        setFields([...fields,  { 
+          id:Math.random().toString(36).substring(7),
+          type: fieldType, 
+          label:fieldLabel
+        }])
+    }
+    const removeField = (id:any) => {
+      const updatedFields = fields.filter(field => field.id !== id);
+      setFields(updatedFields);
     }
     const handleSubmit = async () => {
         try {
@@ -91,11 +99,12 @@ export default function page() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-            {fields.map((field, index) => {
+            {fields.map((field) => {
                 return (
-                    <div key={index}>
+                    <div key={field.id}>
                         <label>{field.label}</label>
                         <Input className="w-1/2" type={field.type}/>
+                        <Button onClick={(() => {removeField(field.id)})}>Delete</Button>
                         <br />
                     </div>
                 )
