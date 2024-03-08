@@ -9,26 +9,22 @@ import { useState } from "react"
 import { Loader2 } from "lucide-react"
 import axios from "axios"
 import { useRouter } from "next/navigation"
+import { createForm } from "@/lib/Form"
 
 export default function CreateForm() {
     const router = useRouter();
     const [ name, setName ] = useState<string>("");
     const [ loading, setLoading ] = useState<boolean>(false);
     const CreateNewForm = async (e:any) => {
-        setLoading(true);
-        e.preventDefault();
-        const formData = {
-            title:name,
-            fields:[]
-        }
-        const res = await axios.post('/api/form/create', formData);
-        const response = await res.data;
-        if(response.ok === true) {
-            setLoading(false);
-            router.push(`/form/edit/${response.response.id}`)
-        } else {
-            console.error('something went wrong');
-        }
+      e.preventDefault();
+      setLoading(true);
+      const response = await createForm(name);
+      setLoading(false);
+      if(response.ok === true ) {
+        router.push(`/form/edit/${response.form?.id}`)
+      } else {
+        // catch error here and display to user
+      }
     }
     return (
         <>
@@ -40,12 +36,14 @@ export default function CreateForm() {
         <DialogHeader>
           <DialogTitle>Create form</DialogTitle>
         </DialogHeader>
+        <form onSubmit={CreateNewForm}>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="name" className="text-left">
               Name
             </Label>
             <Input
+            required
               value={name}
               onChange={((e) => {setName(e.target.value)})}
               id="name"
@@ -58,17 +56,18 @@ export default function CreateForm() {
                 loading 
                 ? 
                 <>
-                     <Button disabled>
+                     <Button className="w-full" disabled>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                         Create Form
                     </Button>
                 </>
                 : 
                 <>
-                    <Button onClick={CreateNewForm}>Create form</Button>
+                    <Button type="submit" className="w-full">Create form</Button>
                 </>
             }
         </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
         </>

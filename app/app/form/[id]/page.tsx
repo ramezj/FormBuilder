@@ -4,18 +4,19 @@ import { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input";
 import FormLayout from "@/components/Layout/FormLayout";
 import { Button } from "@/components/ui/button";
+import { getFormById } from "@/lib/Form";
 
 export default function Page({ params }: {params: { id: string}}) {
     const [ loading, setLoading ] = useState<boolean>(true);
     const [ form, setForm ] = useState<any>()
     const [ response, setResponse ] = useState<{ [key: string]: string}>({});
     useEffect(() => {
-        const fetchForm = async () => {
-            const response = await axios.get(`/api/form/${params.id}`);
-            setForm(response.data.form);
+        const fetch = async () => {
+            const formData = await getFormById(params.id);
+            setForm(formData.form);
             setLoading(false);
         }
-        fetchForm();
+        fetch();
     },[])
     const handleInputChange = (e:any) => {
         setResponse({...response, [e.target.id]: e.target.value });
@@ -27,6 +28,13 @@ export default function Page({ params }: {params: { id: string}}) {
         <>
         <center>
         <FormLayout>
+        {
+            loading === true &&
+            <>
+            <br />
+            <h2>loading your precious form..</h2>
+            </>
+        }
         {
             loading === false && 
             <>
