@@ -37,7 +37,6 @@ export default function Page({ params }: {params: { id: string}}) {
     const [ response, setResponse ] = useState<{ [key: string]: string}>({});
     useEffect(() => {
       const fetchForm = async () => {
-        setSaveLoading(true);
         const response = await getFormById(params.id);
         setLoading(false);
         if(response.ok === true && response.form?.fields ) {
