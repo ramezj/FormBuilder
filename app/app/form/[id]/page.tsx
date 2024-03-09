@@ -5,17 +5,23 @@ import { Input } from "@/components/ui/input";
 import FormLayout from "@/components/Layout/FormLayout";
 import { Button } from "@/components/ui/button";
 import { getFormById } from "@/lib/Form";
+import { useRouter } from "next/navigation";
 
 export default function Page({ params }: {params: { id: string}}) {
+    const router = useRouter();
     const [ loading, setLoading ] = useState<boolean>(true);
     const [ form, setForm ] = useState<any>()
     const [ response, setResponse ] = useState<{ [key: string]: string}>({});
     useEffect(() => {
         const fetch = async () => {
             const formData = await getFormById(params.id);
-            console.log(formData);
-            setForm(formData.form);
-            setLoading(false);
+            if(formData.ok === false) {
+                console.log('should push..')
+                router.push('/not-found');
+            } else {
+                setForm(formData.form);
+                setLoading(false);
+            }
         }
         fetch();
     },[])
