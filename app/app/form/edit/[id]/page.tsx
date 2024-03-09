@@ -24,10 +24,12 @@ import {
     SelectTrigger,
     SelectValue,
   } from "@/components/ui/select"
+import { Loader2 } from "lucide-react"
 
 
 export default function Page({ params }: {params: { id: string}}) {
     const [ loading, setLoading ] = useState<boolean>(true);
+    const [ saveLoading, setSaveLoading ] = useState<boolean>(false);
     const [ form, setForm ] = useState<any>();
     const [ fields, setFields ] = useState<Field[]>([]);
     const [ fieldLabel, setFieldLabel ] = useState<string>("");
@@ -35,6 +37,7 @@ export default function Page({ params }: {params: { id: string}}) {
     const [ response, setResponse ] = useState<{ [key: string]: string}>({});
     useEffect(() => {
       const fetchForm = async () => {
+        setSaveLoading(true);
         const response = await getFormById(params.id);
         setLoading(false);
         if(response.ok === true && response.form?.fields ) {
@@ -47,7 +50,9 @@ export default function Page({ params }: {params: { id: string}}) {
       fetchForm();
     },[])
     const EditFormFields = async () => {
+      setSaveLoading(true);
       const response = await EditForm(params.id, fields);
+      setSaveLoading(false);
 
     }
     const handleInputChange = (e:any) => {
@@ -135,7 +140,20 @@ export default function Page({ params }: {params: { id: string}}) {
             <br />
             </>
         }
-        <Button onClick={EditFormFields}>Save Form</Button>
+        {
+          saveLoading 
+          ? 
+          <>
+              <Button disabled>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
+                Save Form
+              </Button>
+          </> 
+          : 
+          <>
+              <Button onClick={EditFormFields}>Save Form</Button>
+          </>
+        }
         </FormLayout>
         </center>
         </>

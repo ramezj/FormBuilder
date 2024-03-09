@@ -13,6 +13,7 @@ export default function Page({ params }: {params: { id: string}}) {
     useEffect(() => {
         const fetch = async () => {
             const formData = await getFormById(params.id);
+            console.log(formData);
             setForm(formData.form);
             setLoading(false);
         }
