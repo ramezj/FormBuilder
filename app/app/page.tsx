@@ -11,14 +11,16 @@ export default function Home() {
   const { data: session, status } = useSession();
   return (
     <>
-    {/* {
+    {
       status == "authenticated" &&
       <>
       <p>signed in as {JSON.stringify(session.user)}</p>
       </>
-    } */}
+    }
     <br />
     <center>
+      <br />
+      <h1 className='font-light text-6xl'>Experience the future of form building.</h1>
       <CreateForm />
     </center>
     </>
