@@ -111,17 +111,16 @@ export default function Page({ params }: {params: { id: string}}) {
                 </SelectTrigger>
                 <SelectContent>
                     <SelectGroup>
-                    <SelectItem value="text">text</SelectItem>
-                    <SelectItem value="number">number</SelectItem>
-                    <SelectItem value="radio">radio</SelectItem>
-                    <SelectItem value="dropdown">dropdown</SelectItem>
+                    <SelectItem value="text">Text</SelectItem>
+                    <SelectItem value="number">Number</SelectItem>
+                    <SelectItem value="radio">Radio</SelectItem>
                     </SelectGroup>
                 </SelectContent>
             </Select>
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={addNewField}>Add Field</Button>
+          <Button onClick={addNewField} className="w-full">Add Field</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
