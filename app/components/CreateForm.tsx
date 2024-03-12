@@ -14,6 +14,7 @@ import { createForm } from "@/lib/Form"
 export default function CreateForm() {
     const router = useRouter();
     const [ name, setName ] = useState<string>("");
+    const [ buttonText, setButtonText ] = useState<any>("Create form");
     const [ loading, setLoading ] = useState<boolean>(false);
     const CreateNewForm = async (e:any) => {
       e.preventDefault();
@@ -24,6 +25,9 @@ export default function CreateForm() {
         router.push(`/form/edit/${response.form?.id}`)
       } else {
         // catch error here and display to user
+        if(response.ok === false ) {
+          setButtonText(response.error);
+        }
       }
     }
     return (
@@ -63,7 +67,7 @@ export default function CreateForm() {
                 </>
                 : 
                 <>
-                    <Button type="submit" className="w-full">Create form</Button>
+                    <Button type="submit" className="w-full">{buttonText}</Button>
                 </>
             }
         </DialogFooter>

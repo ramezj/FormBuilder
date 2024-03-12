@@ -1,8 +1,19 @@
 "use server"
 
+import { authConfig } from "./Auth";
 import prisma from "./prisma";
+import { getServerSession } from "next-auth";
 
 export async function getFormById(id:string) {
+    const session = await getServerSession(authConfig);
+    if(!session) {
+        const response = {
+            ok:false,
+            form:null,
+            error: 'Please sign in first'
+        }
+    return response;
+    }
     try {
         const form = await prisma.form.findFirst({
             where: {
@@ -25,6 +36,15 @@ export async function getFormById(id:string) {
 }
 
 export async function createForm(title: string) {
+    const session = await getServerSession(authConfig);
+    if(!session) {
+        const response = {
+            ok:false,
+            form:null,
+            error: 'Please sign in first'
+        }
+        return response;
+    }
     if(!title) {
         const response = { ok:false, form:null, error: 'title missing'}
         return response;
@@ -32,7 +52,8 @@ export async function createForm(title: string) {
     try {
         const NewForm = await prisma.form.create({
             data: {
-                title:title
+                title:title,
+                userId:session.user?.id
             }
         });
         const response = { ok:true, form:NewForm, error:null }
@@ -43,7 +64,17 @@ export async function createForm(title: string) {
     }
 }
 
+
 export async function EditForm(formId:string, fields:Field[]) {
+    const session = await getServerSession(authConfig);
+    if(!session) {
+        const response = {
+            ok:false,
+            form:null,
+            error: 'Please sign in first'
+        }
+    return response;
+    }
     try {
         // check first if form exists.
         const existingForm = await prisma.form.findUnique({

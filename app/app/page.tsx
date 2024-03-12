@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import CreateForm from "@/components/CreateForm";
+import { signIn } from "next-auth/react";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -16,6 +17,13 @@ export default function Home() {
       <>
       <p>signed in as {JSON.stringify(session.user)}</p>
       </>
+    }
+    { status === "unauthenticated" && 
+    <>
+    <Button onClick={(() => signIn('google'))}>
+      Continue with google
+    </Button>
+    </>
     }
     <br />
     <center>
