@@ -53,7 +53,7 @@ export async function createForm(title: string) {
         const NewForm = await prisma.form.create({
             data: {
                 title:title,
-                userId:session.user?.id
+                userId:session.user?.id as string
             }
         });
         const response = { ok:true, form:NewForm, error:null }
