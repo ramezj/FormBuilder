@@ -38,20 +38,26 @@ export async function getFormById(id:string) {
 export async function createForm(title: string) {
     const session = await getServerSession(authConfig);
     if(!session) {
-        const response = {
+        return {
             ok:false,
             form:null,
             error: 'Please sign in first'
-        }
-        return response;
+        };
     }
     if(!title) {
-        const response = { ok:false, form:null, error: 'title missing'}
-        return response;
+        return { 
+            ok:false, 
+            form:null, 
+            error: 'title missing'
+        };
     }
     const userExist = await prisma.user.findFirst({where: { id: session?.user?.id as string}});
     if(!userExist) {
-        return { ok: false, form:null, error:'User doesnt exist'}
+        return { 
+            ok: false, 
+            form:null, 
+            error:'User doesnt exist'
+        }
     }
     try {
         const NewForm = await prisma.form.create({
@@ -60,29 +66,29 @@ export async function createForm(title: string) {
                 userId:session.user?.id as string
             }
         });
-        const response = { ok:true, form:NewForm, error:null }
-        return response;
+        return { 
+            ok:true, 
+            form:NewForm, 
+            error:null 
+        };
     } catch (error) {
         console.error(error);
-        const response = { 
+        return { 
             ok:false, 
             form:null, 
             error:'An error has occured'
         }
-        return response;
     }
 }
-
 
 export async function EditForm(formId:string, fields:Field[]) {
     const session = await getServerSession(authConfig);
     if(!session) {
-        const response = {
+        return {
             ok:false,
             form:null,
             error: 'Please sign in first'
         }
-    return response;
     }
     try {
         // check first if form exists.
@@ -92,8 +98,11 @@ export async function EditForm(formId:string, fields:Field[]) {
             }
           });
           if (!existingForm) {
-            const response = { ok:false, form:null, error:'form doesnt exist' }
-            return response;
+            return { 
+                ok:false, 
+                form:null, 
+                error:'form doesnt exist' 
+            };
           }
           const fieldsWithFormId = fields.map((field) => ({
             ...field, formId:formId
