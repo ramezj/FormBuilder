@@ -49,6 +49,10 @@ export async function createForm(title: string) {
         const response = { ok:false, form:null, error: 'title missing'}
         return response;
     }
+    const userExist = await prisma.user.findFirst({where: { id: session?.user?.id as string}});
+    if(!userExist) {
+        return { ok: false, form:null, error:'User doesnt exist'}
+    }
     try {
         const NewForm = await prisma.form.create({
             data: {
@@ -59,7 +63,12 @@ export async function createForm(title: string) {
         const response = { ok:true, form:NewForm, error:null }
         return response;
     } catch (error) {
-        const response = { ok:false, form:null, error:error }
+        console.error(error);
+        const response = { 
+            ok:false, 
+            form:null, 
+            error:'An error has occured'
+        }
         return response;
     }
 }
