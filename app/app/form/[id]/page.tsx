@@ -15,12 +15,11 @@ export default function Page({ params }: {params: { id: string}}) {
     useEffect(() => {
         const fetch = async () => {
             const formData = await getFormById(params.id);
+            console.log(formData);
             if(formData.ok === false) {
-                console.log('should push..')
                 router.push('/not-found');
             } else {
                 setForm(formData.form);
-                setLoading(false);
             }
         }
         fetch();
@@ -46,7 +45,7 @@ export default function Page({ params }: {params: { id: string}}) {
             loading === false && 
             <>
             <br />
-            <h2 className=" text-2xl font-bold">{form.title}</h2>
+            <h2 className=" text-2xl font-bold"></h2>
             <br />
             <form onSubmit={handleFormSubmit}>
             {

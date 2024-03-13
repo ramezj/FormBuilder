@@ -1,10 +1,12 @@
 "use client"
 import axios from "axios"
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import FormLayout from "@/components/Layout/FormLayout";
 import { getFormById, EditForm } from "@/lib/Form";
 import { Button } from "@/components/ui/button";
+import { Settings } from "lucide-react";
 import {
     Dialog,
     DialogContent,
@@ -28,6 +30,7 @@ import { Loader2 } from "lucide-react"
 
 
 export default function Page({ params }: {params: { id: string}}) {
+    const router = useRouter();
     const [ loading, setLoading ] = useState<boolean>(true);
     const [ saveLoading, setSaveLoading ] = useState<boolean>(false);
     const [ form, setForm ] = useState<any>();
@@ -38,13 +41,14 @@ export default function Page({ params }: {params: { id: string}}) {
     useEffect(() => {
       const fetchForm = async () => {
         const response = await getFormById(params.id);
-        setLoading(false);
-        if(response.ok === true && response.form?.fields ) {
+        if(response.ok === false) {
+          router.push('/not-found')
+        }
+        else if(response.ok === true && response.form?.fields ) {
           setForm(response.form);
           setFields(response.form.fields);
-        } else {
-          // catch error here and handle it
         }
+        setLoading(false);
       }
       fetchForm();
     },[])
@@ -85,7 +89,7 @@ export default function Page({ params }: {params: { id: string}}) {
       <DialogTrigger asChild>
         <Button variant="outline">Add New Field</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Add Field</DialogTitle>
         </DialogHeader>
@@ -127,10 +131,47 @@ export default function Page({ params }: {params: { id: string}}) {
             {
                 fields.map((field:Field) => {
                     return (
-                        <div key={field.id} className='text-left'>  
-                        <label className="text-left">{field.label}</label>
+                        <div key={field.id} className='text-left flex align-middle gap-2'>  
+                          <label>{field.label}</label>
                             {field.type === 'text' && <><Input className="w-1/2" type='text'/></>}
                             {field.type === 'number' && <><Input className='w-1/2' type='number' /></>}
+                            {field.type === 'radio' && <></>}
+                            <Dialog>
+                            <DialogTrigger asChild>
+                              <Button variant="outline"><Settings strokeWidth={1.5} className='w-5 h-5'/></Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-[425px]">
+                              <DialogHeader>
+                                <DialogTitle>Edit Field</DialogTitle>
+                              </DialogHeader>
+                              <div className="grid gap-4 py-4">
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                  <Label htmlFor="name" className="text-left">
+                                    Label
+                                  </Label>
+                                  <Input
+                                    id="name"
+                                    defaultValue="Pedro Duarte"
+                                    className="col-span-3"
+                                  />
+                                </div>
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                  <Label htmlFor="username" className="text-left">
+                                    Username
+                                  </Label>
+                                  <Input
+                                    id="username"
+                                    defaultValue="@peduarte"
+                                    className="col-span-3"
+                                  />
+                                </div>
+                              </div>
+                              <DialogFooter className='flex'>
+                                <Button type="submit" className="w-full">Delete</Button>
+                                <Button type="submit" className="w-full">Save changes</Button>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
                         </div>
                     )
                 })
