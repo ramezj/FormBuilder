@@ -15,6 +15,7 @@ export default async function CreateField(label:string, type:string, formId:stri
         }
     }
     try {
+        console.log(label,type,options,formId);
         const form = await prisma.form.findFirst({
             where: {
                 id: formId
@@ -26,7 +27,7 @@ export default async function CreateField(label:string, type:string, formId:stri
                 label: label,
                 type: type,
                 options:options,
-                formId: formId as string
+                formId: formId
             }
         });
         if(!NewField) return { ok:false, error:'something went wrong', field:null}

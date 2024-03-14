@@ -21,6 +21,7 @@ export default function Page({ params }: {params: { id: string}}) {
             } else {
                 setForm(formData.form);
             }
+            setLoading(false);
         }
         fetch();
     },[])

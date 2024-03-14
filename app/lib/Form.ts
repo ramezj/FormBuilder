@@ -109,7 +109,6 @@ export async function EditForm(formId:string, fields:Field[]) {
           const createFields = await prisma.field.createMany({
             data: fieldsWithFormId,
           })
-          console.log(createFields);
     } catch (error) {
         
     }

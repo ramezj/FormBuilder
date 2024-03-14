@@ -27,6 +27,7 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 import { Loader2 } from "lucide-react"
+import CreateField from "@/lib/Field";
 
 
 export default function Page({ params }: {params: { id: string}}) {
@@ -36,8 +37,17 @@ export default function Page({ params }: {params: { id: string}}) {
     const [ form, setForm ] = useState<any>();
     const [ fields, setFields ] = useState<Field[]>([]);
     const [ fieldLabel, setFieldLabel ] = useState<string>("");
-    const [ fieldType, setFieldType ] = useState<string>("text"); 
+    const [ fieldType, setFieldType ] = useState<string>("text");
+    const [ options, setOptions ] = useState<string[]>([""]) 
     const [ response, setResponse ] = useState<{ [key: string]: string}>({});
+    const CreateNewField = async () => {
+      const NewF = await CreateField(fieldLabel, fieldType, params.id, options);
+      if(NewF.ok == true) {
+        setFields([...fields, NewF.field as Field]);
+      } else {
+        console.error(NewF.error);
+      }
+    }
     useEffect(() => {
       const fetchForm = async () => {
         const response = await getFormById(params.id);
@@ -64,13 +74,6 @@ export default function Page({ params }: {params: { id: string}}) {
     }
     const handleFormSubmit = async (e:any) => {
         e.preventDefault();
-    }
-    const addNewField = (e:any) => {
-        setFields([...fields,  { 
-          id:Math.random().toString(36).substring(7),
-          type: fieldType, 
-          label:fieldLabel
-        }])
     }
     const removeField = (id:any) => {
         const updatedFields = fields.filter(field => field.id !== id);
@@ -125,7 +128,7 @@ export default function Page({ params }: {params: { id: string}}) {
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={addNewField} className="w-full">Add Field</Button>
+          <Button onClick={CreateNewField} className="w-full">Add Field</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
