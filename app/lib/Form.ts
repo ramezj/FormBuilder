@@ -7,12 +7,11 @@ import { getServerSession } from "next-auth";
 export async function getFormById(id:string) {
     const session = await getServerSession(authConfig);
     if(!session) {
-        const response = {
-            ok:false,
-            form:null,
-            error: 'Please sign in first'
-        }
-    return response;
+    return {
+        ok:false,
+        form:null,
+        error: 'Please sign in first'
+    }
     }
     try {
         const form = await prisma.form.findFirst({

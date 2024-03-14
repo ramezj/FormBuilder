@@ -52,6 +52,7 @@ export default function Page({ params }: {params: { id: string}}) {
       }
       fetchForm();
     },[])
+    console.log(fields);
     const EditFormFields = async () => {
       setSaveLoading(true);
       const response = await EditForm(params.id, fields);
