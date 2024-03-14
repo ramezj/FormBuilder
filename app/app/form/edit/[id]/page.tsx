@@ -27,7 +27,7 @@ import {
     SelectValue,
   } from "@/components/ui/select"
 import { Loader2 } from "lucide-react"
-import CreateField from "@/lib/Field";
+import { CreateField, DeleteField } from "@/lib/Field";
 
 
 export default function Page({ params }: {params: { id: string}}) {
@@ -46,6 +46,14 @@ export default function Page({ params }: {params: { id: string}}) {
         setFields([...fields, NewF.field as Field]);
       } else {
         console.error(NewF.error);
+      }
+    }
+    const DeleteFieldById = async (fieldId:any) => {
+      const deleteF = await DeleteField(fieldId);
+      if(deleteF.ok == true) {
+        console.log('field deleted successfully')
+      } else {
+        console.error(deleteF.error);
       }
     }
     useEffect(() => {
@@ -136,6 +144,7 @@ export default function Page({ params }: {params: { id: string}}) {
                 fields.map((field:Field) => {
                     return (
                         <div key={field.id} className='text-left flex align-middle gap-2'>  
+                        {field.id}
                           <label>{field.label}</label>
                             {field.type === 'text' && <><Input className="w-1/2" type='text'/></>}
                             {field.type === 'number' && <><Input className='w-1/2' type='number' /></>}
@@ -155,7 +164,7 @@ export default function Page({ params }: {params: { id: string}}) {
                                   </Label>
                                   <Input
                                     id="name"
-                                    defaultValue="Pedro Duarte"
+                                    value={field.label}
                                     className="col-span-3"
                                   />
                                 </div>
@@ -171,7 +180,7 @@ export default function Page({ params }: {params: { id: string}}) {
                                 </div>
                               </div>
                               <DialogFooter className='flex'>
-                                <Button type="submit" className="w-full">Delete</Button>
+                                <Button variant={"destructive"} onClick={(() => DeleteFieldById(field.id))} className="w-full">Delete</Button>
                                 <Button type="submit" className="w-full">Save changes</Button>
                               </DialogFooter>
                             </DialogContent>

@@ -4,7 +4,7 @@ import { authConfig } from "./Auth";
 import prisma from "./prisma";
 import { getServerSession } from "next-auth";
 
-export default async function CreateField(label:string, type:string, formId:string, options:any) {
+export async function CreateField(label:string, type:string, formId:string, options:any) {
     const session = await getServerSession(authConfig);
     if(!session) return { ok:false, error: 'Unauthenticated', field:null }
     if(!label || !type || !formId) {
@@ -15,7 +15,6 @@ export default async function CreateField(label:string, type:string, formId:stri
         }
     }
     try {
-        console.log(label,type,options,formId);
         const form = await prisma.form.findFirst({
             where: {
                 id: formId
@@ -35,5 +34,33 @@ export default async function CreateField(label:string, type:string, formId:stri
     } catch (error) {
         console.error(error);
         return { ok:false, error:'catched an error', field:null }
+    }
+}
+
+export async function EditField(fieldId: string) {
+
+}
+
+export async function DeleteField(fieldId:string) {
+    const session = await getServerSession(authConfig);
+    if(!session) return { ok:false, error: 'Unauthenticated' }
+    if(!fieldId) return { ok:false, error:'field id missing'}
+    try {
+        const field = await prisma.field.findFirst({
+            where: {
+                id:fieldId
+            }
+        });
+        if(!field) return { ok:false, error:'field not found'}
+        const deleteField = await prisma.field.delete({
+            where: {
+                id:fieldId
+            }
+        });
+        if(!deleteField) return { ok:false, error:'couldnt delete field' }
+        return { ok:true, error:null }
+    } catch (error) {
+        console.error(error);
+        return { ok:false, error: 'something went wrong..'}
     }
 }
